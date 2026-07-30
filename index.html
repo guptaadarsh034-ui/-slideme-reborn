@@ -1,105 +1,80 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SlideME Reborn v0.1 - Legacy App Archive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SlideME Reborn Store</title>
 <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: Arial, sans-serif; background:#0a0c10; color:#e0e0e0; }
-  
-  header { background:#12151c; padding:20px 15px; text-align:center; border-bottom:2px solid #4fc3f7; }
-  header h1 { color:#4fc3f7; font-size:24px; margin-bottom:5px; }
-  header p { font-size:12px; color:#888; }
-  
-  .container { padding:15px; max-width:900px; margin:auto; }
-  .notice { background:#1a1d23; padding:10px; border-radius:6px; font-size:12px; margin-bottom:15px; border-left:3px solid #4fc3f7; }
-  
-  .app-card { background:#12151c; border-radius:8px; padding:15px; margin:12px 0; border:1px solid #222; }
-  .app-card h3 { color:#4fc3f7; margin-bottom:5px; font-size:17px; }
-  .app-card .desc { font-size:13px; color:#aaa; margin-bottom:10px; }
-  .app-card .tag { display:inline-block; background:#4fc3f7; color:#000; font-size:11px; padding:2px 6px; border-radius:4px; font-weight:bold; margin-bottom:10px; }
-  
-  .sources { margin-top:8px; }
-  .sources span { font-size:12px; color:#888; display:block; margin-bottom:5px; }
-  .sources a { display:inline-block; background:#222; color:#eee; padding:6px 10px; 
-               border-radius:5px; text-decoration:none; margin:3px 4px 3px 0; font-size:12px; }
-  .sources a:hover { background:#4fc3f7; color:#000; }
-  
-  footer { text-align:center; padding:20px 15px; font-size:11px; color:#555; border-top:1px solid #222; margin-top:20px; }
+body{font-family:Arial;background:#111;color:#eee;margin:0;padding:10px}
+h1{text-align:center;color:#00ff88}
+#search{width:100%;padding:10px;font-size:16px;border-radius:8px;border:none;margin-bottom:10px}
+.app{background:#222;padding:10px;margin:10px 0;border-radius:10px;display:flex;gap:10px;cursor:pointer}
+.app img{width:64px;height:64px;border-radius:10px}
+.btn{display:inline-block;padding:8px 12px;margin:5px;background:#00ff88;color:#000;border-radius:5px;text-decoration:none;font-weight:bold}
+.back{color:#00ff88;cursor:pointer;margin-bottom:10px;display:inline-block}
+#detail{display:none}
 </style>
 </head>
 <body>
+<h1>SlideME Reborn Store</h1>
 
-<header>
-  <h1>SlideME Reborn</h1>
-  <p>Version 0.1 | Unofficial Fan Archive for Legacy Android Apps</p>
-</header>
-
-<div class="container">
-  
-  <div class="notice">
-    <b>Disclaimer:</b> This is an unofficial fan project. We do NOT host any APKs. 
-    All downloads redirect to APKMirror, APKPure, Aptoide and other public app stores.
-  </div>
-
-  <h2>Apps Tested for Android 4.4 KitKat</h2>
-
-  <div class="app-card">
-    <h3>UC Browser Mini</h3>
-    <span class="tag">✓ Tested on J1 Ace</span>
-    <p class="desc">Last lightweight version. Fast, data saver, works on 512MB RAM.</p>
-    <div class="sources">
-      <span>Get it from:</span>
-      <a href="https://apkmirror.com/apk/ucweb/uc-browser-mini/" target="_blank">APKMirror</a>
-      <a href="https://apkpure.com/uc-browser-mini/com.UCMini.International" target="_blank">APKPure</a>
-      <a href="https://liteapks.com/uc-browser-mini/" target="_blank">LiteAPKs</a>
-    </div>
-  </div>
-
-  <div class="app-card">
-    <h3>Opera Mini</h3>
-    <span class="tag">✓ Tested on J1 Ace</span>
-    <p class="desc">Classic data compression browser. Perfect for slow internet.</p>
-    <div class="sources">
-      <span>Get it from:</span>
-      <a href="https://apkmirror.com/apk/opera-software-as/opera-mini/" target="_blank">APKMirror</a>
-      <a href="https://apkpure.com/opera-mini/com.opera.mini.native" target="_blank">APKPure</a>
-      <a href="https://modiroid.com/opera-mini/" target="_blank">Modiroid</a>
-    </div>
-  </div>
-
-  <div class="app-card">
-    <h3>WhatsApp Messenger - Legacy</h3>
-    <span class="tag">✓ Tested on J1 Ace</span>
-    <p class="desc">Final version that supports Android 4.4. No new features, but it works.</p>
-    <div class="sources">
-      <span>Get it from:</span>
-      <a href="https://apkmirror.com/apk/whatsapp-inc/whatsapp/" target="_blank">APKMirror</a>
-      <a href="https://apkpure.com/whatsapp/com.whatsapp" target="_blank">APKPure</a>
-      <a href="https://apkvision.com/apk/whatsapp-inc/whatsapp/" target="_blank">APKVision</a>
-      <a href="https://en.aptoide.com/app/com.whatsapp" target="_blank">Aptoide</a>
-    </div>
-  </div>
-
-  <div class="app-card">
-    <h3>MX Player</h3>
-    <p class="desc">Best video player for old phones. Supports all codecs.</p>
-    <div class="sources">
-      <span>Get it from:</span>
-      <a href="https://apkmirror.com/apk/j2-interactive/mx-player/" target="_blank">APKMirror</a>
-      <a href="https://apkpure.com/mx-player/com.mxtech.videoplayer.ad" target="_blank">APKPure</a>
-      <a href="https://liteapks.com/mx-player/" target="_blank">LiteAPKs</a>
-    </div>
-  </div>
-
+<div id="home">
+  <p style="text-align:center">App Store for Android 4.4 and below</p>
+  <input type="text" id="search" placeholder="Search apps...">
+  <div id="apps"></div>
 </div>
 
-<footer>
-  <p>SlideME Reborn v0.1 - Built solo with respect</p>
-  <p>Dedicated to the OG SlideME team 2010-2016 | Not affiliated with SlideME Inc</p>
-  <p>Want to add an app? Email: yourname@email.com</p>
-</footer>
+<div id="detail">
+  <span class="back" onclick="showHome()">← Back</span>
+  <div id="detail-content"></div>
+</div>
 
+<script>
+let apps = [];
+fetch('apps.json').then(r=>r.json()).then(data=>{
+  apps = data;
+  showApps(apps);
+});
+
+function showApps(list){
+  let html = '';
+  list.forEach(app=>{
+    html += `<div class="app" onclick="showDetail('${app.id}')">
+      <img src="${app.icon}">
+      <div>
+        <b>${app.name}</b><br>
+        <small>Android ${app.min_android}+ | ${app.size}</small><br>
+        <small>${app.description}</small>
+      </div>
+    </div>`;
+  });
+  document.getElementById('apps').innerHTML = html;
+}
+
+function showDetail(id){
+  let app = apps.find(a=>a.id==id);
+  let links = app.sources.map(s=>`<a class="btn" href="${s.url}" target="_blank">Get from ${s.name}</a>`).join('');
+  document.getElementById('detail-content').innerHTML = `
+    <img src="${app.icon}" style="width:96px;height:96px;border-radius:15px">
+    <h2>${app.name}</h2>
+    <p><b>Min Android:</b> ${app.min_android}+<br>
+    <b>Size:</b> ${app.size}</p>
+    <p>${app.description}</p>
+    <h3>Download From:</h3>
+    ${links}
+  `;
+  document.getElementById('home').style.display='none';
+  document.getElementById('detail').style.display='block';
+}
+
+function showHome(){
+  document.getElementById('home').style.display='block';
+  document.getElementById('detail').style.display='none';
+}
+
+document.getElementById('search').oninput = e=>{
+  let q = e.target.value.toLowerCase();
+  showApps(apps.filter(a=>a.name.toLowerCase().includes(q)));
+}
+</script>
 </body>
 </html>
