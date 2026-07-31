@@ -1,80 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SlideME Reborn Store</title>
-<style>
-body{font-family:Arial;background:#111;color:#eee;margin:0;padding:10px}
-h1{text-align:center;color:#00ff88}
-#search{width:100%;padding:10px;font-size:16px;border-radius:8px;border:none;margin-bottom:10px}
-.app{background:#222;padding:10px;margin:10px 0;border-radius:10px;display:flex;gap:10px;cursor:pointer}
-.app img{width:64px;height:64px;border-radius:10px}
-.btn{display:inline-block;padding:8px 12px;margin:5px;background:#00ff88;color:#000;border-radius:5px;text-decoration:none;font-weight:bold}
-.back{color:#00ff88;cursor:pointer;margin-bottom:10px;display:inline-block}
-#detail{display:none}
-</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SlideME Reborn</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>SlideME Reborn Store</h1>
 
-<div id="home">
-  <p style="text-align:center">App Store for Android 4.4 and below</p>
-  <input type="text" id="search" placeholder="Search apps...">
-  <div id="apps"></div>
+<!-- Left Swipe Menu -->
+<div id="sidebar">
+  <h2>Choose Source</h2>
+  <a href="#" onclick="loadSource('https://guptaadarsh034-ui.github.io/-slideme-reborn')">SlideME Reborn</a>
+  <a href="#" onclick="loadSource('https://www.apkmirror.com')">APKMirror</a>
+  <a href="#" onclick="loadSource('https://apkpure.com')">APKPure</a>
+  <a href="#" onclick="loadSource('https://uptodown.com')">Uptodown</a>
 </div>
 
-<div id="detail">
-  <span class="back" onclick="showHome()">← Back</span>
-  <div id="detail-content"></div>
+<!-- Top Bar -->
+<div class="navbar">
+  <span onclick="openSidebar()">☰</span>
+  <h1>SlideME Reborn</h1>
 </div>
 
-<script>
-let apps = [];
-fetch('apps.json').then(r=>r.json()).then(data=>{
-  apps = data;
-  showApps(apps);
-});
+<!-- App List -->
+<div class="container">
+  <h2>Featured Apps</h2>
 
-function showApps(list){
-  let html = '';
-  list.forEach(app=>{
-    html += `<div class="app" onclick="showDetail('${app.id}')">
-      <img src="${app.icon}">
-      <div>
-        <b>${app.name}</b><br>
-        <small>Android ${app.min_android}+ | ${app.size}</small><br>
-        <small>${app.description}</small>
-      </div>
-    </div>`;
-  });
-  document.getElementById('apps').innerHTML = html;
-}
+  <div class="app-card">
+    <img src="https://play-lh.googleusercontent.com/...icon...">
+    <div>
+      <h3>WhatsApp</h3>
+      <p>Latest Version: 2.24.1</p>
+      <a href="https://www.apkmirror.com/apk/whatsapp-inc/whatsapp/" target="_blank">Download from APKMirror</a>
+    </div>
+  </div>
 
-function showDetail(id){
-  let app = apps.find(a=>a.id==id);
-  let links = app.sources.map(s=>`<a class="btn" href="${s.url}" target="_blank">Get from ${s.name}</a>`).join('');
-  document.getElementById('detail-content').innerHTML = `
-    <img src="${app.icon}" style="width:96px;height:96px;border-radius:15px">
-    <h2>${app.name}</h2>
-    <p><b>Min Android:</b> ${app.min_android}+<br>
-    <b>Size:</b> ${app.size}</p>
-    <p>${app.description}</p>
-    <h3>Download From:</h3>
-    ${links}
-  `;
-  document.getElementById('home').style.display='none';
-  document.getElementById('detail').style.display='block';
-}
+  <div class="app-card">
+    <img src="https://play-lh.googleusercontent.com/...icon...">
+    <div>
+      <h3>Instagram</h3>
+      <p>Latest Version: 312.0</p>
+      <a href="https://apkpure.com/instagram/com.instagram.android" target="_blank">Download from APKPure</a>
+    </div>
+  </div>
 
-function showHome(){
-  document.getElementById('home').style.display='block';
-  document.getElementById('detail').style.display='none';
-}
+</div>
 
-document.getElementById('search').oninput = e=>{
-  let q = e.target.value.toLowerCase();
-  showApps(apps.filter(a=>a.name.toLowerCase().includes(q)));
-}
-</script>
+<iframe id="webframe" src="about:blank"></iframe>
+
+<script src="script.js"></script>
 </body>
 </html>
