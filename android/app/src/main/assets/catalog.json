@@ -1,0 +1,45 @@
+{
+  "catalogVersion": 1,
+  "notice": "Demo metadata only. No third-party APKs are bundled.",
+  "apps": [
+    {
+      "id": "classic-notes-demo",
+      "name": "Classic Notes",
+      "category": "Tools",
+      "version": "1.0",
+      "minAndroidApi": 15,
+      "description": "Illustrative catalog entry for a lightweight offline notes app. This is placeholder metadata, not a claim that an APK is available.",
+      "license": "Demo entry",
+      "status": "metadata-only",
+      "sourceUrl": "",
+      "downloadUrl": "",
+      "sha256": ""
+    },
+    {
+      "id": "retro-calculator-demo",
+      "name": "Retro Calculator",
+      "category": "Tools",
+      "version": "1.0",
+      "minAndroidApi": 15,
+      "description": "Illustrative catalog entry for a simple calculator. This is placeholder metadata, not a claim that an APK is available.",
+      "license": "Demo entry",
+      "status": "metadata-only",
+      "sourceUrl": "",
+      "downloadUrl": "",
+      "sha256": ""
+    },
+    {
+      "id": "sample-puzzle-demo",
+      "name": "Sample Puzzle",
+      "category": "Games",
+      "version": "1.0",
+      "minAndroidApi": 15,
+      "description": "Illustrative game catalog entry. No game APK is included or offered.",
+      "license": "Demo entry",
+      "status": "metadata-only",
+      "sourceUrl": "",
+      "downloadUrl": "",
+      "sha256": ""
+    }
+  ]
+}
