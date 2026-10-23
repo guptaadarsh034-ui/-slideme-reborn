@@ -15,10 +15,11 @@ public final class CatalogItem {
     public final String sourceUrl;
     public final String downloadUrl;
     public final String sha256;
+    public final String signingCertSha256;
 
     public CatalogItem(String id, String name, String category, String version,
                        int minAndroidApi, String description, String license,
-                       String status, String sourceUrl, String downloadUrl, String sha256) {
+                       String status, String sourceUrl, String downloadUrl, String sha256, String signingCertSha256) {
         this.id = safe(id);
         this.name = safe(name);
         this.category = safe(category);
@@ -30,12 +31,14 @@ public final class CatalogItem {
         this.sourceUrl = safe(sourceUrl);
         this.downloadUrl = safe(downloadUrl);
         this.sha256 = safe(sha256).toLowerCase(Locale.ROOT);
+        this.signingCertSha256 = safe(signingCertSha256).toLowerCase(Locale.ROOT);
     }
 
     public boolean hasDownload() {
         return id.matches("[A-Za-z0-9._-]{1,80}")
                 && isHttps(downloadUrl)
-                && sha256.matches("[0-9a-f]{64}");
+                && sha256.matches("[0-9a-f]{64}")
+                && signingCertSha256.matches("[0-9a-f]{64}");
     }
 
     public static boolean isHttps(String value) {
