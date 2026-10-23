@@ -97,7 +97,8 @@ public final class CatalogRepository {
                     item.optString("status", "unverified"),
                     item.optString("sourceUrl", ""),
                     item.optString("downloadUrl", ""),
-                    item.optString("sha256", "")
+                    item.optString("sha256", ""),
+                    item.optString("signingCertSha256", "")
             ));
         }
         return result;
