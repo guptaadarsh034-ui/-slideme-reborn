@@ -1,6 +1,9 @@
 package org.fan.slidemeclassic;
 
-public class CatalogItem {
+import java.net.URI;
+import java.util.Locale;
+
+public final class CatalogItem {
     public final String id;
     public final String name;
     public final String category;
@@ -16,21 +19,38 @@ public class CatalogItem {
     public CatalogItem(String id, String name, String category, String version,
                        int minAndroidApi, String description, String license,
                        String status, String sourceUrl, String downloadUrl, String sha256) {
-        this.id = id;
-        this.name = name;
-        this.category = category;
-        this.version = version;
-        this.minAndroidApi = minAndroidApi;
-        this.description = description;
-        this.license = license;
-        this.status = status;
-        this.sourceUrl = sourceUrl;
-        this.downloadUrl = downloadUrl;
-        this.sha256 = sha256;
+        this.id = safe(id);
+        this.name = safe(name);
+        this.category = safe(category);
+        this.version = safe(version);
+        this.minAndroidApi = Math.max(1, minAndroidApi);
+        this.description = safe(description);
+        this.license = safe(license);
+        this.status = safe(status);
+        this.sourceUrl = safe(sourceUrl);
+        this.downloadUrl = safe(downloadUrl);
+        this.sha256 = safe(sha256).toLowerCase(Locale.ROOT);
     }
 
     public boolean hasDownload() {
-        return downloadUrl != null && downloadUrl.startsWith("https://")
-                && sha256 != null && sha256.matches("(?i)[0-9a-f]{64}");
+        return id.matches("[A-Za-z0-9._-]{1,80}")
+                && isHttps(downloadUrl)
+                && sha256.matches("[0-9a-f]{64}");
+    }
+
+    public static boolean isHttps(String value) {
+        if (value == null || value.length() > 2048 || !value.startsWith("https://")) return false;
+        try {
+            URI uri = URI.create(value);
+            return "https".equalsIgnoreCase(uri.getScheme())
+                    && uri.getHost() != null && !uri.getHost().isEmpty()
+                    && uri.getUserInfo() == null;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    private static String safe(String value) {
+        return value == null ? "" : value.trim();
     }
 }
