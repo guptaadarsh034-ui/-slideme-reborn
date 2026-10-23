@@ -1,17 +1,26 @@
-# SlideME Classic (native MVP)
+# SlideME Reborn (native Android MVP)
 
 An unofficial, fan-made marketplace prototype inspired by the old SlideME experience. This is a clean-room implementation; it does not reuse decompiled code or proprietary artwork from the uploaded SlideME SAM APK.
 
-## Current scope
+## Implemented
 
-- Native Java Android app (no WebView)
-- Minimum SDK API 29 (Android 10); designed for Android 10 and newer
-- Compile/target SDK 35 (Android 15 target)
-- Offline catalog metadata bundled as JSON
-- Local search and category filters
-- App detail dialog with licence and status fields
-- No accounts, ads, analytics, or third-party APKs bundled
-- Demo catalog entries have no APK download URLs
+- Native Java Android app; no WebView
+- Minimum SDK API 29 (Android 10); compile/target SDK 35
+- Bundled offline JSON catalog with local search and category filters
+- Online catalog refresh over HTTPS, with a persisted cache and bundled fallback
+- App detail view with source, licence, availability, and version metadata
+- HTTPS APK download with redirect limits, connection/read timeouts, a 500 MB cap, and cancellation
+- SHA-256 verification before an APK is passed to Android's package installer
+- FileProvider exposes only the app's private cache directory
+- No accounts, ads, analytics, or third-party APKs bundled inside the marketplace installer
+
+## Important current limitations
+
+- The bundled catalog still contains demo metadata entries. They intentionally have no download URLs, so they cannot be installed.
+- A SHA-256 match proves the downloaded bytes match the catalog's expected hash; it does **not** prove an APK is benign or that the catalog publisher is trustworthy.
+- The app does not yet verify APK signing-certificate fingerprints, scan APKs, or independently validate redistribution rights. Do not publish an APK entry until provenance, licence/permission, package identity, signing certificate, Android compatibility, and hash have been reviewed.
+- The online catalog URL currently points at this repository's `step-1-native-mvp` branch. Change it to your maintained production catalog URL before publishing.
+- The current downloader uses an indeterminate progress indicator; byte-level progress and resumable downloads are not implemented.
 
 ## Build
 
@@ -21,21 +30,18 @@ An unofficial, fan-made marketplace prototype inspired by the old SlideME experi
 4. Sync Gradle, then build the app module.
 5. Test on Android 10 (API 29) and newer emulators/devices.
 
-GitHub Actions builds a debug APK and uploads it as an artifact when the workflow succeeds.
+GitHub Actions builds a debug APK and uploads it as an artifact when the workflow succeeds. A successful CI build is not a substitute for testing on physical devices.
 
 ## Catalog format
 
-Edit `app/src/main/assets/catalog.json`. Only add a download URL after confirming redistribution permission, provenance, and compatibility. Compute the SHA-256 of the exact APK before enabling a download link.
+Edit `app/src/main/assets/catalog.json`. The top-level object contains `catalogVersion`, `notice`, and an `apps` array. Each entry uses:
 
-The current prototype does not yet implement a complete in-app download-and-hash-verification workflow. Do not label an APK verified until the downloaded bytes and signing certificate have actually been checked.
+- `id`, `name`, `category`, `version`, `minAndroidApi`, `description`
+- `license`, `status`, `sourceUrl`
+- `downloadUrl` and `sha256` (both required to enable the download action)
 
-## Uploaded historical APK
+Only use HTTPS URLs. `sha256` must be the 64-character SHA-256 hex digest of the exact APK bytes. Keep metadata honest: identify placeholders and untested apps clearly. Never invent hashes or claim verification without computing it from the actual file.
 
-The uploaded `com.slideme.sam.manager-6.36.apk` is treated as a visual/behavior reference only. Do not copy decompiled code, proprietary assets, signing keys, or third-party app files into this project unless you have the necessary rights.
+## Historical APK reference
 
-## Preservation and safety
-
-- Do not bundle third-party APKs in the marketplace app.
-- Keep TLS certificate validation enabled.
-- Label untested, withdrawn, incompatible, and metadata-only entries clearly.
-- Record source, licence/permission, package name, version, SHA-256, signing-certificate fingerprint, and test results for each preserved APK.
+The uploaded com.slideme.sam.manager-6.36.apk is treated as a visual/behavior reference only. Do not copy decompiled code, proprietary assets, signing keys, or third-party app files into this project unless you have the necessary rights.
