@@ -8,6 +8,7 @@ An unofficial, fan-made marketplace prototype inspired by the old SlideME experi
 - Minimum SDK API 29 (Android 10); compile/target SDK 35
 - Bundled offline JSON catalog with local search and category filters
 - Online catalog refresh over HTTPS, with a persisted cache and bundled fallback
+- Uptodown discovery shortcuts for its app and game catalog, plus a search shortcut that opens a web search restricted to Uptodown pages
 - App detail view with source, licence, availability, and version metadata
 - HTTPS APK download with redirect limits, connection/read timeouts, a 500 MB cap, and cancellation
 - SHA-256 and APK signing-certificate fingerprint verification before an APK is passed to Android's package installer
@@ -19,7 +20,9 @@ An unofficial, fan-made marketplace prototype inspired by the old SlideME experi
 - The bundled catalog still contains demo metadata entries. They intentionally have no download URLs, so they cannot be installed.
 - A SHA-256 match proves the downloaded bytes match the catalog's expected hash; it does **not** prove an APK is benign or that the catalog publisher is trustworthy.
 - The app does not scan APKs or independently validate redistribution rights. Do not publish an APK entry until provenance, licence/permission, package identity, signing certificate, Android compatibility, and hash have been reviewed. Multi-signer APKs are currently rejected.
+- Uptodown is currently an external discovery source, **not** an integrated catalog API/backend. The app opens Uptodown's official category pages and uses a site-restricted web search; it does not scrape Uptodown or fetch its catalog data into the native UI.
 - The online catalog URL currently points at this repository's `step-1-native-mvp` branch. Change it to your maintained production catalog URL before publishing.
+- A true Uptodown-backed in-app catalog requires Uptodown's explicit authorization and supported API/feed/widget integration. Its terms prohibit unauthorized automated extraction and data mining; do not add scraping or reverse-engineer private endpoints.
 - The current downloader uses an indeterminate progress indicator; byte-level progress and resumable downloads are not implemented.
 
 ## Build
