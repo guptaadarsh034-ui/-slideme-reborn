@@ -10,7 +10,7 @@ An unofficial, fan-made marketplace prototype inspired by the old SlideME experi
 - Online catalog refresh over HTTPS, with a persisted cache and bundled fallback
 - App detail view with source, licence, availability, and version metadata
 - HTTPS APK download with redirect limits, connection/read timeouts, a 500 MB cap, and cancellation
-- SHA-256 verification before an APK is passed to Android's package installer
+- SHA-256 and APK signing-certificate fingerprint verification before an APK is passed to Android's package installer
 - FileProvider exposes only the app's private cache directory
 - No accounts, ads, analytics, or third-party APKs bundled inside the marketplace installer
 
@@ -18,7 +18,7 @@ An unofficial, fan-made marketplace prototype inspired by the old SlideME experi
 
 - The bundled catalog still contains demo metadata entries. They intentionally have no download URLs, so they cannot be installed.
 - A SHA-256 match proves the downloaded bytes match the catalog's expected hash; it does **not** prove an APK is benign or that the catalog publisher is trustworthy.
-- The app does not yet verify APK signing-certificate fingerprints, scan APKs, or independently validate redistribution rights. Do not publish an APK entry until provenance, licence/permission, package identity, signing certificate, Android compatibility, and hash have been reviewed.
+- The app does not scan APKs or independently validate redistribution rights. Do not publish an APK entry until provenance, licence/permission, package identity, signing certificate, Android compatibility, and hash have been reviewed. Multi-signer APKs are currently rejected.
 - The online catalog URL currently points at this repository's `step-1-native-mvp` branch. Change it to your maintained production catalog URL before publishing.
 - The current downloader uses an indeterminate progress indicator; byte-level progress and resumable downloads are not implemented.
 
@@ -38,9 +38,9 @@ Edit `app/src/main/assets/catalog.json`. The top-level object contains `catalogV
 
 - `id`, `name`, `category`, `version`, `minAndroidApi`, `description`
 - `license`, `status`, `sourceUrl`
-- `downloadUrl` and `sha256` (both required to enable the download action)
+- `downloadUrl`, `sha256`, and `signingCertSha256` (all required to enable the download action)
 
-Only use HTTPS URLs. `sha256` must be the 64-character SHA-256 hex digest of the exact APK bytes. Keep metadata honest: identify placeholders and untested apps clearly. Never invent hashes or claim verification without computing it from the actual file.
+Only use HTTPS URLs. `sha256` must be the 64-character SHA-256 hex digest of the exact APK bytes. `signingCertSha256` must be the 64-character SHA-256 digest of the APK signing certificate's DER bytes (not the APK file hash). Keep metadata honest: identify placeholders and untested apps clearly. Never invent hashes or claim verification without computing it from the actual file.
 
 ## Historical APK reference
 
