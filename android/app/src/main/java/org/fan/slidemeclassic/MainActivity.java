@@ -154,12 +154,37 @@ public class MainActivity extends Activity {
         try {
             allItems.clear();
             allItems.addAll(CatalogRepository.loadBundled(this));
+            List<CatalogItem> cached = CatalogRepository.loadCached(this);
+            if (!cached.isEmpty()) {
+                allItems.clear();
+                allItems.addAll(cached);
+            }
             filterItems();
-            statusText.setText(allItems.size() + " catalog entries • download availability varies");
+            statusText.setText(allItems.size() + " catalog entries • checking for updates…");
         } catch (Exception e) {
             statusText.setText("Catalog could not be loaded");
             Toast.makeText(this, "Could not load the offline catalog.", Toast.LENGTH_LONG).show();
+            return;
         }
+
+        io.execute(() -> {
+            try {
+                List<CatalogItem> fresh = CatalogRepository.refreshRemote(this,
+                        "https://raw.githubusercontent.com/guptaadarsh034-ui/-slideme-reborn/step-1-native-mvp/android/app/src/main/assets/catalog.json");
+                main.post(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    allItems.clear();
+                    allItems.addAll(fresh);
+                    filterItems();
+                    statusText.setText(fresh.size() + " catalog entries • updated online");
+                });
+            } catch (Exception ignored) {
+                main.post(() -> {
+                    if (isFinishing() || isDestroyed()) return;
+                    statusText.setText(allItems.size() + " catalog entries • offline/cached mode");
+                });
+            }
+        });
     }
 
     private void filterItems() {
