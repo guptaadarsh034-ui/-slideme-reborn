@@ -3,6 +3,8 @@ package org.fan.slidemeclassic;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -278,6 +280,7 @@ public class MainActivity extends Activity {
                 }
                 String actual = toHex(digest.digest());
                 if (!actual.equalsIgnoreCase(item.sha256)) throw new java.io.IOException("SHA-256 mismatch; file rejected");
+                verifySigningCertificate(apk, item.signingCertSha256);
                 File verified = new File(getCacheDir(), item.id + ".apk");
                 if (verified.exists() && !verified.delete()) throw new java.io.IOException("Could not replace cached APK");
                 if (!apk.renameTo(verified)) throw new java.io.IOException("Could not finalize verified APK");
@@ -341,6 +344,26 @@ public class MainActivity extends Activity {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(address)));
         } catch (Exception e) {
             Toast.makeText(this, "No app can open this link.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void verifySigningCertificate(File apk, String expectedFingerprint) throws Exception {
+        if (expectedFingerprint == null || !expectedFingerprint.matches("(?i)[0-9a-f]{64}")) {
+            throw new java.io.IOException("Catalog has no valid signing-certificate fingerprint");
+        }
+        PackageInfo info = getPackageManager().getPackageArchiveInfo(
+                apk.getAbsolutePath(), PackageManager.GET_SIGNING_CERTIFICATES);
+        if (info == null || info.signingInfo == null) {
+            throw new java.io.IOException("Downloaded file is not a valid signed Android package");
+        }
+        android.content.pm.Signature[] signers = info.signingInfo.getApkContentsSigners();
+        if (signers == null || signers.length != 1) {
+            throw new java.io.IOException("APK has an unsupported number of signing certificates");
+        }
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        String actualFingerprint = toHex(digest.digest(signers[0].toByteArray()));
+        if (!actualFingerprint.equalsIgnoreCase(expectedFingerprint)) {
+            throw new java.io.IOException("APK signing certificate mismatch; file rejected");
         }
     }
 
