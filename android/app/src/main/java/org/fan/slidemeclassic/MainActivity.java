@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class MainActivity extends Activity {
     private final List<CatalogItem> allItems = new ArrayList<CatalogItem>();
@@ -44,6 +45,7 @@ public class MainActivity extends Activity {
     private TextView statusText;
     private String selectedCategory = "All";
     private AlertDialog progressDialog;
+    private Future<?> downloadTask;
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -222,19 +224,14 @@ public class MainActivity extends Activity {
         label.setPadding(0, dp(12), 0, 0);
         box.addView(label);
         progressDialog = new AlertDialog.Builder(this).setTitle(item.name).setView(box)
-                .setNegativeButton("Cancel", (d, w) -> io.shutdownNow()).create();
+                .setNegativeButton("Cancel", (d, w) -> { if (downloadTask != null) downloadTask.cancel(true); }).create();
         progressDialog.setCancelable(false);
         progressDialog.show();
-        io.execute(() -> {
+        downloadTask = io.submit(() -> {
             File apk = null;
             try {
-                HttpsURLConnection connection = (HttpsURLConnection) new URL(item.downloadUrl).openConnection();
-                connection.setConnectTimeout(15000);
-                connection.setReadTimeout(20000);
-                connection.setInstanceFollowRedirects(false);
-                connection.setRequestProperty("User-Agent", "SlideME-Reborn/0.2");
+                HttpsURLConnection connection = openDownloadConnection(item.downloadUrl);
                 int code = connection.getResponseCode();
-                if (code < 200 || code >= 300) throw new java.io.IOException("Download server returned HTTP " + code);
                 long length = connection.getContentLengthLong();
                 if (length > 500L * 1024L * 1024L) throw new java.io.IOException("APK exceeds the 500 MB safety limit");
                 apk = new File(getCacheDir(), item.id + ".apk.part");
@@ -283,6 +280,34 @@ public class MainActivity extends Activity {
                 });
             }
         });
+    }
+
+    private HttpsURLConnection openDownloadConnection(String address) throws Exception {
+        URL current = new URL(address);
+        for (int redirects = 0; redirects <= 5; redirects++) {
+            if (!"https".equalsIgnoreCase(current.getProtocol()) || current.getUserInfo() != null) {
+                throw new java.io.IOException("Only trusted HTTPS download URLs are allowed");
+            }
+            HttpsURLConnection connection = (HttpsURLConnection) current.openConnection();
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(20000);
+            connection.setInstanceFollowRedirects(false);
+            connection.setRequestProperty("User-Agent", "SlideME-Reborn/0.2");
+            int code = connection.getResponseCode();
+            if (code >= 200 && code < 300) return connection;
+            if (code == 301 || code == 302 || code == 303 || code == 307 || code == 308) {
+                String location = connection.getHeaderField("Location");
+                connection.disconnect();
+                if (location == null || location.trim().isEmpty() || redirects == 5) {
+                    throw new java.io.IOException("Download redirect could not be followed");
+                }
+                current = new URL(current, location);
+                continue;
+            }
+            connection.disconnect();
+            throw new java.io.IOException("Download server returned HTTP " + code);
+        }
+        throw new java.io.IOException("Too many download redirects");
     }
 
     private void openHttps(String address) {
