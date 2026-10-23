@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLEncoder;
 import javax.net.ssl.HttpsURLConnection;
 import java.security.MessageDigest;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class MainActivity extends Activity {
         root.addView(title, new LinearLayout.LayoutParams(-1, dp(58)));
 
         TextView subtitle = new TextView(this);
-        subtitle.setText("A community-built classic app catalog");
+        subtitle.setText("Offline catalog + Uptodown discovery");
         subtitle.setTextColor(Color.rgb(80, 88, 75));
         subtitle.setTextSize(13);
         subtitle.setPadding(dp(2), dp(10), 0, dp(8));
@@ -91,6 +92,19 @@ public class MainActivity extends Activity {
         searchBox.setHint("Search apps and games");
         searchBox.setPadding(dp(12), 0, dp(12), 0);
         root.addView(searchBox, new LinearLayout.LayoutParams(-1, dp(48)));
+
+        LinearLayout sourceRow = new LinearLayout(this);
+        sourceRow.setOrientation(LinearLayout.HORIZONTAL);
+        sourceRow.setPadding(0, dp(4), 0, dp(4));
+        addSourceButton(sourceRow, "Uptodown Apps", "https://en.uptodown.com/android/apps");
+        addSourceButton(sourceRow, "Uptodown Games", "https://en.uptodown.com/android/games");
+        Button searchSource = new Button(this);
+        searchSource.setText("Search Uptodown");
+        searchSource.setTextSize(10);
+        searchSource.setAllCaps(false);
+        searchSource.setOnClickListener(v -> openUptodownSearch());
+        sourceRow.addView(searchSource, new LinearLayout.LayoutParams(0, dp(42), 1));
+        root.addView(sourceRow);
         searchBox.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) { filterItems(); }
@@ -138,6 +152,28 @@ public class MainActivity extends Activity {
         statusText.setPadding(0, dp(8), 0, dp(2));
         root.addView(statusText);
         setContentView(root);
+    }
+
+    private void addSourceButton(LinearLayout row, String label, String url) {
+        Button button = new Button(this);
+        button.setText(label);
+        button.setTextSize(10);
+        button.setAllCaps(false);
+        button.setOnClickListener(v -> openHttps(url));
+        row.addView(button, new LinearLayout.LayoutParams(0, dp(42), 1));
+    }
+
+    private void openUptodownSearch() {
+        String query = searchBox == null ? "" : searchBox.getText().toString().trim();
+        if (query.isEmpty()) {
+            openHttps("https://en.uptodown.com/android/apps");
+            return;
+        }
+        try {
+            openHttps("https://www.google.com/search?q=" + URLEncoder.encode("site:en.uptodown.com/android " + query, "UTF-8"));
+        } catch (Exception e) {
+            Toast.makeText(this, "Could not prepare the search.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addCategoryButton(LinearLayout row, final String category) {
